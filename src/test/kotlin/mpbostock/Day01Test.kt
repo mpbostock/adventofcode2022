@@ -34,24 +34,24 @@ internal class Day01Test {
         val mostCaloriesElf = Elf(listOf(200, 300, 400))
         val leastCaloriesElf = Elf(listOf(100, 200, 300))
         val elves = Elves(listOf(leastCaloriesElf, mostCaloriesElf))
-        assertEquals(900, elves.mostCalories())
+        assertEquals(900, elves.highestTotalCalories())
     }
 
     @Test
     fun `No calories is returned for most calories if no elves`() {
         val elves = Elves(emptyList())
-        assertEquals(0, elves.mostCalories())
+        assertEquals(0, elves.highestTotalCalories())
     }
 
     @Test
     fun `Elf with most calories for test data`() {
         val elves = Elves.fromInput(testInput)
-        assertEquals(24000, elves.mostCalories())
+        assertEquals(24000, elves.highestTotalCalories())
     }
 
     @Test
     fun `Top three elves with most calories for test data`() {
         val elves = Elves.fromInput(testInput)
-        assertEquals(45000, elves.mostCaloriesTopThree())
+        assertEquals(45000, elves.highestTotalCalories(3))
     }
 }

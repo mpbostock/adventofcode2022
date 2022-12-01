@@ -2,13 +2,11 @@ package mpbostock
 
 object Day01 {
     fun partOne(input: List<String>): Int {
-        val elves = Elves.fromInput(input)
-        return elves.mostCalories()
+        return Elves.fromInput(input).highestTotalCalories()
     }
 
     fun partTwo(input: List<String>): Int {
-        val elves = Elves.fromInput(input)
-        return elves.mostCaloriesTopThree()
+        return Elves.fromInput(input).highestTotalCalories(3)
     }
 
     class Elf(private val food: List<Int>) {
@@ -16,8 +14,9 @@ object Day01 {
     }
 
     class Elves(private val elves: List<Elf>) {
-        fun mostCalories(): Int = elves.maxOfOrNull { it.totalCalories() } ?: 0
-        fun mostCaloriesTopThree(): Int = elves.sortedByDescending { it.totalCalories() }.take(3).sumOf { it.totalCalories() }
+        fun highestTotalCalories(numElves: Int = 1): Int =
+            elves.map { it.totalCalories() }.sortedByDescending { it }.take(numElves).sum()
+
         companion object {
             fun fromInput(input: List<String>): Elves {
                 var inputCopy = input.toList()
