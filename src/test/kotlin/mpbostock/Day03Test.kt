@@ -1,7 +1,8 @@
 package mpbostock
 
 import mpbostock.Day03.Items
-import mpbostock.Day03.Rucksack
+import mpbostock.Day03.chopInHalf
+import mpbostock.Day03.commonChar
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -31,39 +32,31 @@ internal class Day03Test {
 
     @Test
     fun `rucksack splits in half`() {
-        val rucksack = Rucksack(testData[0])
-        assertEquals("vJrwpWtwJgWr", rucksack.firstCompartment)
-        assertEquals("hcsFMMfFFhFp", rucksack.secondCompartment)
+        val twoHalves = testData[0].chopInHalf()
+        assertEquals("vJrwpWtwJgWr", twoHalves[0])
+        assertEquals("hcsFMMfFFhFp", twoHalves[1])
     }
 
     @Test
     fun `common item is in both compartments of rucksack`() {
-        val rucksack = Rucksack(testData[0])
-        assertEquals('p', rucksack.commonItem)
+        val twoHalves = testData[0].chopInHalf()
+        assertEquals('p', twoHalves.commonChar())
     }
 
     @Test
     fun `sum of priorities in test data`() {
-        val rucksacks = testData.map { Rucksack(it) }
-        assertEquals(157, rucksacks.sumOf { Items.priorityFor(it.commonItem) })
+        assertEquals(157, Day03.partOne(testData))
     }
 
     @Test
     fun `common item is in rucksack group`() {
-        val rucksackGroup = Day03.RucksackGroup(Triple(testData[0], testData[1], testData[2]))
-        assertEquals('r', rucksackGroup.commonItem)
+        val rucksackGroup = listOf(testData[0], testData[1], testData[2])
+        assertEquals('r', rucksackGroup.commonChar())
     }
 
     @Test
     fun `sum of rucksack group priorities in test data`() {
-        assertEquals(70, testData.windowed(3, 3).sumOf { Items.priorityFor(
-            Day03.RucksackGroup(
-                Triple(
-                    it[0],
-                    it[1],
-                    it[2]
-                )
-            ).commonItem) })
+        assertEquals(70, Day03.partTwo(testData))
     }
 
 }

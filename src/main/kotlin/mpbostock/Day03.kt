@@ -1,6 +1,13 @@
 package mpbostock
 
 object Day03 {
+    fun List<String>.commonChar(): Char {
+        return this.fold(this.first().toSet()) { acc, str -> acc intersect str.toSet() }.first()
+    }
+    fun String.chopInHalf(): List<String> {
+        val half = this.length / 2
+        return listOf(this.take(half), this.drop(half))
+    }
     object Items {
         private val lowercasePriorities = ('a'..'z').zip(1..26).toMap()
         private val uppercasePriorities = ('A'..'Z').zip(27..52).toMap()
@@ -8,22 +15,12 @@ object Day03 {
         fun priorityFor(item: Char): Int = allItemPriorities[item]!!
     }
 
-    class Rucksack(allItems: String) {
-        val firstCompartment = allItems.substring(0, allItems.length / 2)
-        val secondCompartment = allItems.substring(allItems.length / 2, allItems.length)
-        val commonItem = firstCompartment.toSet().intersect(secondCompartment.toSet()).first()
-    }
-
-    class RucksackGroup(rucksacks: Triple<String, String, String>) {
-        val commonItem = rucksacks.first.toSet().intersect(rucksacks.second.toSet()).intersect(rucksacks.third.toSet()).first()
-    }
-
     fun partOne(input: List<String>): Int {
-        return input.sumOf { Items.priorityFor(Rucksack(it).commonItem) }
+        return input.sumOf { Items.priorityFor(it.chopInHalf().commonChar()) }
     }
 
     fun partTwo(input: List<String>): Int {
-        return input.windowed(3, 3).sumOf { Items.priorityFor(RucksackGroup(Triple(it[0], it[1], it[2])).commonItem) }
+        return input.windowed(3, 3).sumOf { Items.priorityFor(it.commonChar()) }
     }
 
     private val input = FileIO.readInput("day03input.txt") { s -> s }
