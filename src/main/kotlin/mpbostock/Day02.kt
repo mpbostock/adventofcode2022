@@ -6,7 +6,7 @@ object Day02 {
         PAPER(2, 'B', 'Y'),
         SCISSORS(3, 'C', 'Z');
 
-        fun beats(otherHand: HandShape): Boolean {
+        infix fun beats(otherHand: HandShape): Boolean {
             return when (this) {
                 ROCK -> otherHand == SCISSORS
                 PAPER -> otherHand == ROCK
@@ -40,7 +40,7 @@ object Day02 {
         fun score(): Int {
             val result = when {
                 opponent drawsWith player -> 3
-                player.beats(opponent) -> 6
+                player beats opponent -> 6
                 else -> 0
             }
             return result + player.score
