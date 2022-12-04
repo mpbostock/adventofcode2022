@@ -16,15 +16,15 @@ object Day04 {
         val secondAssignment = IntRange.fromList(split[1].split("-").map { it.toInt() })
         return Pair(firstAssignment, secondAssignment)
     }
-    fun partOne(input: List<String>): Int {
-        return input.map { calculateSectionAssignments(it) }.count { it.fullyContains() }
+    fun partOne(input: List<Pair<IntRange, IntRange>>): Int {
+        return input.count { it.fullyContains() }
     }
 
-    fun partTwo(input: List<String>): Int {
-        return input.map { calculateSectionAssignments(it) }.count { it.partiallyContains() }
+    fun partTwo(input: List<Pair<IntRange, IntRange>>): Int {
+        return input.count { it.partiallyContains() }
     }
 
-    private val input = FileIO.readInput("day04input.txt") { s -> s }
+    private val input = FileIO.readInput("day04input.txt", ::calculateSectionAssignments)
 
     @JvmStatic
     fun main(args: Array<String>) {
