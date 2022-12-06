@@ -4,7 +4,7 @@ object Day06 {
     fun findStartingPacketIndex(datastream: String, uniqueSize: Int): Int {
         val firstUnique =
             datastream.windowed(uniqueSize).map { it.toSet() }.first { it.size == uniqueSize }.joinToString("")
-        return firstUnique.let { datastream.indexOf(it) + uniqueSize }
+        return datastream.indexOf(firstUnique) + uniqueSize
     }
 
     fun partOne(input: List<String>): Int {
