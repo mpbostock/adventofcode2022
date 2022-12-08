@@ -5,44 +5,45 @@ object Day08 {
         private val width = treeHeights[0].size
         private val height = treeHeights.size
 
-        fun clownsToTheLeftOf(coord: Vector2d) = (0 until coord.x).map { Vector2d(it, coord.y) }
-        fun jokersToTheRight(coord: Vector2d) = (coord.x + 1 until width).map { Vector2d(it, coord.y) }
-        fun treesAbove(coord: Vector2d) = (0 until coord.y).map { Vector2d(coord.x, it) }
-        fun treesBelow(coord: Vector2d) = (coord.y + 1 until height).map { Vector2d(coord.x, it) }
+        fun clownsToTheLeftOf(tree: Vector2d) = (tree.x - 1 downTo  0).map { Vector2d(it, tree.y) }
+        fun jokersToTheRight(tree: Vector2d) = (tree.x + 1 until width).map { Vector2d(it, tree.y) }
+        fun treesAbove(tree: Vector2d) = (tree.y - 1 downTo 0).map { Vector2d(tree.x, it) }
+        fun treesBelow(tree: Vector2d) = (tree.y + 1 until height).map { Vector2d(tree.x, it) }
 
-        fun treeIsVisible(coord: Vector2d): Boolean {
-            return isEdgeOfForest(coord) || canSeeWoodForTheTrees(coord)
+        fun treeIsVisible(tree: Vector2d): Boolean {
+
+            return isEdgeOfForest(tree) || canSeeWoodForTheTrees(tree)
         }
 
-        fun viewingDistance(coord: Vector2d, otherTrees: List<Vector2d>): Int {
+        fun viewingDistance(tree: Vector2d, otherTrees: List<Vector2d>): Int {
             if (otherTrees.isEmpty()) return 0
-            val treeHeight = getHeight(coord)
+            val treeHeight = getHeight(tree)
             val otherTreeCoordsHeights = otherTrees.zip(otherTrees.map { getHeight(it) })
-            return coord.abs(otherTreeCoordsHeights.firstOrNull { it.second >= treeHeight }?.first ?: otherTrees.last())
+            return tree.abs(otherTreeCoordsHeights.firstOrNull { it.second >= treeHeight }?.first ?: otherTrees.last())
         }
 
         fun scenicScore(tree: Vector2d): Int {
-            val distanceAbove = viewingDistance(tree, treesAbove(tree).reversed())
-            val distanceLeft = viewingDistance(tree, clownsToTheLeftOf(tree).reversed())
+            val distanceAbove = viewingDistance(tree, treesAbove(tree))
+            val distanceLeft = viewingDistance(tree, clownsToTheLeftOf(tree))
             val distanceRight = viewingDistance(tree, jokersToTheRight(tree))
             val distanceBelow = viewingDistance(tree, treesBelow(tree))
             return distanceAbove * distanceLeft * distanceRight * distanceBelow
         }
 
-        private fun isEdgeOfForest(coord: Vector2d): Boolean {
-            return coord.x == 0 || coord.x == width - 1 || coord.y == 0 || coord.y == height - 1
+        private fun isEdgeOfForest(tree: Vector2d): Boolean {
+            return tree.x == 0 || tree.x == width - 1 || tree.y == 0 || tree.y == height - 1
         }
 
-        private fun canSeeWoodForTheTrees(coord: Vector2d): Boolean {
-            val treeHeight = getHeight(coord)
-            val heightsToTheLeft = getHeights(clownsToTheLeftOf(coord))
-            val heightsToTheRight = getHeights(jokersToTheRight(coord))
-            val heightsAbove = getHeights(treesAbove(coord))
-            val heightsBelow = getHeights(treesBelow(coord))
+        private fun canSeeWoodForTheTrees(tree: Vector2d): Boolean {
+            val treeHeight = getHeight(tree)
+            val heightsToTheLeft = getHeights(clownsToTheLeftOf(tree))
+            val heightsToTheRight = getHeights(jokersToTheRight(tree))
+            val heightsAbove = getHeights(treesAbove(tree))
+            val heightsBelow = getHeights(treesBelow(tree))
             return heightsToTheLeft.all { it < treeHeight } || heightsToTheRight.all { it < treeHeight } || heightsAbove.all { it < treeHeight } || heightsBelow.all { it < treeHeight }
         }
 
-        private fun allCoords(): List<Vector2d> {
+        private fun allTrees(): List<Vector2d> {
             val coords = emptyList<Vector2d>().toMutableList()
             for (x in 0 until width) {
                 for (y in 0 until height) {
@@ -52,14 +53,14 @@ object Day08 {
             return coords
         }
 
-        private fun getHeight(coord: Vector2d) = treeHeights[coord.y][coord.x]
-        private fun getHeights(coords: List<Vector2d>) = coords.map { getHeight(it) }
+        private fun getHeight(tree: Vector2d) = treeHeights[tree.y][tree.x]
+        private fun getHeights(trees: List<Vector2d>) = trees.map { getHeight(it) }
         fun numVisibleTrees(): Int {
-            return allCoords().map { treeIsVisible(it) }.count { it }
+            return allTrees().map { treeIsVisible(it) }.count { it }
         }
 
         fun bestScenicScore(): Int {
-            return allCoords().map { scenicScore(it) }.maxOf { it }
+            return allTrees().map { scenicScore(it) }.maxOf { it }
         }
 
         companion object {
