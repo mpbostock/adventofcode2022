@@ -69,8 +69,8 @@ object Day07 {
     fun parseConsoleOutput(input: List<String>): Directory {
         val rootDir = Directory.createRoot()
         var currentDirectory = rootDir
-        tailrec fun rec(lines: List<String>): List<String> {
-            if (lines.isEmpty()) return lines
+        tailrec fun parseLine(lines: List<String>) {
+            if (lines.isEmpty()) return
             val line = lines.take(1).first()
             var dropNumLines = 1
             when {
@@ -83,9 +83,9 @@ object Day07 {
                     currentDirectory = cd(currentDirectory, line)
                 }
             }
-            return rec(lines.drop(dropNumLines))
+            parseLine(lines.drop(dropNumLines))
         }
-        rec(input.drop(1))
+        parseLine(input.drop(1))
         return rootDir
     }
 
